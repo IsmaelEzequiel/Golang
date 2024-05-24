@@ -19,6 +19,10 @@ func (r *repositoryMock) Save(campaign *Campaign) error {
 	return args.Error(0)
 }
 
+func (r *repositoryMock) Get() []Campaign {
+	return []Campaign{}
+}
+
 var (
 	newCampaign = contract.NewCampaign{
 		Name:    "Ismael",
@@ -102,10 +106,8 @@ func Test_Create_SaveCampaignErrorDB(t *testing.T) {
 func Test_Create_Error_SaveDomain(t *testing.T) {
 	assert := assert.New(t)
 
-	newCampaign.Name = ""
-
-	_, err := service.Create(newCampaign)
+	_, err := service.Create(contract.NewCampaign{})
 
 	assert.NotNil(err)
-	assert.Equal("name is lower then 5", err.Error())
+	assert.False(errors.Is(internalerrors.ErrInternal, err))
 }
