@@ -1,6 +1,8 @@
 package database
 
-import "emailSender/internal/domain/campaign"
+import (
+	"emailSender/internal/domain/campaign"
+)
 
 type CampaignRepository struct {
 	campaigns []campaign.Campaign
@@ -12,6 +14,6 @@ func (c *CampaignRepository) Save(campaign *campaign.Campaign) error {
 	return nil
 }
 
-func (c *CampaignRepository) Get() []campaign.Campaign {
-	return c.campaigns
+func (c *CampaignRepository) Get() ([]campaign.Campaign, error) {
+	return c.campaigns, nil
 }
