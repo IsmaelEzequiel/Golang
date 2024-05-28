@@ -8,9 +8,9 @@ import (
 )
 
 type Contact struct {
-	ID         string `gorm:"size:50"`
-	Email      string `validate:"email"`
-	CampaignID string
+	ID         string `gorm:"size:50" json:"id"`
+	Email      string `validate:"email" json:"email"`
+	CampaignID string `json:"campaign_id"`
 }
 
 const (
@@ -21,12 +21,12 @@ const (
 )
 
 type Campaign struct {
-	ID        string    `validate:"required" gorm:"size:50"`
-	Name      string    `validate:"min=5,max=24" gorm:"size:100"`
-	CreatedAt time.Time `validate:"required"`
-	Content   string    `validate:"min=5,max=1024"`
-	Contacts  []Contact `validate:"min=1,dive"`
-	Status    string
+	ID        string    `validate:"required" gorm:"size:50" json:"id"`
+	Name      string    `validate:"min=5,max=24" gorm:"size:100" json:"name"`
+	CreatedAt time.Time `validate:"required" json:"created_at"`
+	Content   string    `validate:"min=5,max=1024" json:"content"`
+	Contacts  []Contact `validate:"min=1,dive" json:"contacts"`
+	Status    string    `json:"status"`
 }
 
 func (c *Campaign) Cancel() {

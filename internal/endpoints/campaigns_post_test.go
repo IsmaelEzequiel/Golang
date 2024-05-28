@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"emailSender/internal/contract"
 	"emailSender/internal/domain/campaign"
-	internalMock "emailSender/internal/test/mock"
+	internalMock "emailSender/internal/test/internal-mock"
 	"encoding/json"
 	"errors"
 	"net/http"

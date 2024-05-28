@@ -9,7 +9,7 @@ import (
 type Service interface {
 	Get() ([]Campaign, error)
 	GetBy(id string) (*contract.CampaignResponse, error)
-	Cancel(id string) error
+	Delete(id string) error
 	Create(newCampaign contract.NewCampaign) (string, error)
 }
 
@@ -24,7 +24,7 @@ func (s *ServiceImpl) Create(newCampaign contract.NewCampaign) (string, error) {
 		return "", err
 	}
 
-	err = s.Repository.Save(campaign)
+	err = s.Repository.Create(campaign)
 
 	if err != nil {
 		return "", internalerrors.ErrInternal
@@ -47,31 +47,30 @@ func (s *ServiceImpl) GetBy(id string) (*contract.CampaignResponse, error) {
 	campaign, err := s.Repository.GetBy(id)
 
 	if err != nil {
-		return nil, internalerrors.ErrInternal
+		return nil, internalerrors.ProcessErrorNotFound(err)
 	}
 
 	return &contract.CampaignResponse{
-		ID:      campaign.ID,
-		Name:    campaign.Name,
-		Content: campaign.Content,
-		Status:  campaign.Status,
+		ID:                   campaign.ID,
+		Name:                 campaign.Name,
+		Content:              campaign.Content,
+		Status:               campaign.Status,
+		AmountOfEmailsToSend: len(campaign.Contacts),
 	}, nil
 }
 
-func (s *ServiceImpl) Cancel(id string) error {
+func (s *ServiceImpl) Delete(id string) error {
 	campaign, err := s.Repository.GetBy(id)
 
 	if err != nil {
-		return internalerrors.ErrInternal
+		return internalerrors.ProcessErrorNotFound(err)
 	}
 
-	if campaign.Status != Pending {
-		return errors.New("Campaign status invalid")
+	if campaign == nil {
+		return errors.New("Campaign not found")
 	}
 
-	campaign.Cancel()
-
-	err = s.Repository.Save(campaign)
+	err = s.Repository.Delete(campaign)
 
 	if err != nil {
 		return internalerrors.ErrInternal
