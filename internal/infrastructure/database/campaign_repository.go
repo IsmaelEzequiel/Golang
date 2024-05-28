@@ -2,29 +2,27 @@ package database
 
 import (
 	"emailSender/internal/domain/campaign"
-	"errors"
+
+	"gorm.io/gorm"
 )
 
 type CampaignRepository struct {
-	campaigns []campaign.Campaign
+	Database *gorm.DB
 }
 
 func (c *CampaignRepository) Save(campaign *campaign.Campaign) error {
-	c.campaigns = append(c.campaigns, *campaign)
-
-	return nil
+	xt := c.Database.Save(&campaign)
+	return xt.Error
 }
 
 func (c *CampaignRepository) Get() ([]campaign.Campaign, error) {
-	return c.campaigns, nil
+	var campaigns []campaign.Campaign
+	xt := c.Database.Find(&campaigns)
+	return campaigns, xt.Error
 }
 
-func (c *CampaignRepository) GetById(id string) (*campaign.Campaign, error) {
-	for _, camp := range c.campaigns {
-		if camp.ID == id {
-			return &camp, nil
-		}
-	}
-
-	return nil, errors.New("campaign not found")
+func (c *CampaignRepository) GetBy(id string) (*campaign.Campaign, error) {
+	var campaign campaign.Campaign
+	xt := c.Database.Find(&campaign, "id = ?", id)
+	return &campaign, xt.Error
 }

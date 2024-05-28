@@ -23,12 +23,12 @@ func Test_CampaignGet_should_return_campaign(t *testing.T) {
 	}
 
 	service := new(internalMock.CampaignServiceMock)
-	service.On("GetById", mock.Anything).Return(&body, nil)
+	service.On("GetBy", mock.Anything).Return(&body, nil)
 	handler := Handler{CampaignService: service}
 	req, _ := http.NewRequest("GET", "/", nil)
 	rr := httptest.NewRecorder()
 
-	response, status, _ := handler.CampaignGetById(rr, req)
+	response, status, _ := handler.CampaignGetBy(rr, req)
 
 	assert.Equal(status, http.StatusOK)
 	assert.Equal(body.ID, response.(*contract.CampaignResponse).ID)
@@ -41,12 +41,12 @@ func Test_CampaignGet_should_return_error_when_something_went_wrong(t *testing.T
 	assert := assert.New(t)
 
 	service := new(internalMock.CampaignServiceMock)
-	service.On("GetById", mock.Anything).Return(nil, errors.New("Some error"))
+	service.On("GetBy", mock.Anything).Return(nil, errors.New("Some error"))
 	handler := Handler{CampaignService: service}
 	req, _ := http.NewRequest("GET", "/", nil)
 	rr := httptest.NewRecorder()
 
-	_, status, err := handler.CampaignGetById(rr, req)
+	_, status, err := handler.CampaignGetBy(rr, req)
 
 	assert.Equal(status, http.StatusOK)
 	assert.Equal(err.Error(), "some error")

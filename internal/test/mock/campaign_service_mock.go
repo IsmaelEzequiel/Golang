@@ -16,9 +16,14 @@ func (r *CampaignServiceMock) Create(newCampaign contract.NewCampaign) (string, 
 	return args.String(0), args.Error(0)
 }
 
-func (r *CampaignServiceMock) GetById(id string) (*contract.CampaignResponse, error) {
+func (r *CampaignServiceMock) GetBy(id string) (*contract.CampaignResponse, error) {
 	// args := r.Called(newCampaign)
 	return nil, nil
+}
+
+func (r *CampaignServiceMock) Cancel(id string) error {
+	// args := r.Called(newCampaign)
+	return nil
 }
 
 func (r *CampaignServiceMock) Get() ([]campaign.Campaign, error) {

@@ -1,15 +1,19 @@
-POST http://localhost:3000/campaings
+POST http://localhost:3000/campaigns
 
 {
 	"Name": "Ismael Ezequiel",
 	"Content": "some long content",
-	"Emails": ["email@email.com", "email@email.com"]
+	"Emails": ["email@email.com", "emails@email.com"]
 }
 
 ###
 
-GET http://localhost:3000/campaings
+GET http://localhost:3000/campaigns
 
 ###
 
-GET http://localhost:3000/campaings/cpai36s8iv2428bhlso0
+GET http://localhost:3000/campaigns/cpaja8c8iv23f5c14aeg
+
+###
+
+PATCH http://localhost:3000/campaigns/cancel/cpaja8c8iv23f5c14aeg

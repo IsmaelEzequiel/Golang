@@ -19,13 +19,18 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	// Routes
-	service := campaign.ServiceImpl{Repository: &database.CampaignRepository{}}
-	handler := endpoints.Handler{CampaignService: &service}
+	db := database.NewDB()
 
-	r.Post("/campaings", endpoints.HandlerError(handler.CampaignPost))
-	r.Get("/campaings", endpoints.HandlerError(handler.CampaignGet))
-	r.Get("/campaings/{id}", endpoints.HandlerError(handler.CampaignGetById))
+	// Routes
+	campaignService := campaign.ServiceImpl{Repository: &database.CampaignRepository{Database: db}}
+	handler := endpoints.Handler{CampaignService: &campaignService}
+
+	r.Route("/campaigns", func(r chi.Router) {
+		r.Post("/", endpoints.HandlerError(handler.CampaignPost))
+		r.Get("/", endpoints.HandlerError(handler.CampaignGet))
+		r.Get("/{id}", endpoints.HandlerError(handler.CampaignGetBy))
+		r.Patch("/cancel/{id}", endpoints.HandlerError(handler.CampaignsUpdate))
+	})
 
 	http.ListenAndServe(":3000", r)
 }

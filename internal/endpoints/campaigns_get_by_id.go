@@ -3,11 +3,11 @@ package endpoints
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
-func (h *Handler) CampaignGetById(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+func (h *Handler) CampaignGetBy(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
 	id := chi.URLParam(r, "id")
-	campaign, err := h.CampaignService.GetById(id)
+	campaign, err := h.CampaignService.GetBy(id)
 	return campaign, http.StatusOK, err
 }
