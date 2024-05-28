@@ -11,12 +11,19 @@ type Contacts struct {
 	Email string `validate:"email"`
 }
 
+const (
+	Pending = "pending"
+	Started = "started"
+	Done    = "done"
+)
+
 type Campaign struct {
 	ID        string     `validate:"required"`
 	Name      string     `validate:"min=5,max=24"`
 	CreatedAt time.Time  `validate:"required"`
 	Content   string     `validate:"min=5,max=1024"`
 	Contacts  []Contacts `validate:"min=1,dive"`
+	Status    string
 }
 
 func NewCampaign(name string, content string, emails []string) (*Campaign, error) {
@@ -33,6 +40,7 @@ func NewCampaign(name string, content string, emails []string) (*Campaign, error
 		CreatedAt: time.Now(),
 		Content:   content,
 		Contacts:  contacts,
+		Status:    Pending,
 	}
 
 	err := internalerrors.ValidateStruct(newCampaign)

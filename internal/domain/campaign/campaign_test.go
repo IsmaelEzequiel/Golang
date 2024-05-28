@@ -89,3 +89,12 @@ func Test_NewCampaign_MustValidateContactsInvalid(t *testing.T) {
 
 	assert.Equal("email is invalid", err.Error())
 }
+
+func Test_NewCampaign_Status_must_exist_and_pending(t *testing.T) {
+	assert := assert.New(t)
+
+	campaign, _ := NewCampaign(name, content, []string{"email@email.com"})
+
+	assert.NotNil(campaign.Status)
+	assert.Equal(campaign.Status, Pending)
+}

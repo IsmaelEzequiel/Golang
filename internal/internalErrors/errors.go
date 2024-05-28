@@ -1,5 +1,8 @@
 package internalerrors
 
-import "errors"
+import (
+	"errors"
+	"net/http"
+)
 
-var ErrInternal error = errors.New("internal server error")
+var ErrInternal error = errors.New(http.StatusText(http.StatusInternalServerError))
