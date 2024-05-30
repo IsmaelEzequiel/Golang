@@ -28,13 +28,13 @@ func Test_CampaignGet_should_return_campaign(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	rr := httptest.NewRecorder()
 
-	_, status, _ := handler.CampaignGetBy(rr, req)
+	response, status, _ := handler.CampaignGetBy(rr, req)
 
 	assert.Equal(status, http.StatusOK)
-	// assert.Equal(body.ID, response.(*contract.CampaignResponse).ID)
-	// assert.Equal(body.Name, response.(*contract.CampaignResponse).Name)
-	// assert.Equal(body.Content, response.(*contract.CampaignResponse).Content)
-	// assert.Equal(body.Status, response.(*contract.CampaignResponse).Status)
+	assert.Equal(body.ID, response.(*contract.CampaignResponse).ID)
+	assert.Equal(body.Name, response.(*contract.CampaignResponse).Name)
+	assert.Equal(body.Content, response.(*contract.CampaignResponse).Content)
+	assert.Equal(body.Status, response.(*contract.CampaignResponse).Status)
 }
 
 func Test_CampaignGet_should_return_error_when_something_went_wrong(t *testing.T) {
@@ -49,5 +49,5 @@ func Test_CampaignGet_should_return_error_when_something_went_wrong(t *testing.T
 	_, status, err := handler.CampaignGetBy(rr, req)
 
 	assert.Equal(status, http.StatusOK)
-	assert.Equal(err, "some error")
+	assert.Equal(err.Error(), "Some error")
 }

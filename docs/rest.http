@@ -1,19 +1,45 @@
-POST http://localhost:3000/campaigns
+@host = http://localhost:3000
+@keycloak_host = http://localhost:8080
+@campaign_id = cpajai48iv23a5ivct6g
+
+###
+
+POST {{host}}/campaigns
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
 
 {
-	"Name": "Ismael Ezequiel",
-	"Content": "some long content",
-	"Emails": ["email@email.com", "emails@email.com"]
+	"name": "Ismael ezequiel alves",
+	"content": "some long content",
+	"contacts": ["email@email.com", "emails@email.com"]
 }
 
 ###
 // GET /
-GET http://localhost:3000/campaigns
+GET {{host}}/campaigns
+Authorization: Bearer {{access_token}}
 
 ###
 // GET /campaigns
-GET http://localhost:3000/campaigns/cpb4a748iv27lot0jbrg
+GET {{host}}/campaigns/{{campaign_id}}
+Authorization: Bearer {{access_token}}
+
+###
+// GET /ping
+GET {{host}}/ping
+
 
 ###
 // PATCH /campaigns/delete
-PATCH http://localhost:3000/campaigns/delete/cpb4a748iv27lot0jbrg
+PATCH {{host}}/campaigns/delete/{{campaign_id}}
+Authorization: Bearer {{access_token}}
+
+###
+# @name token
+POST {{keycloak_host}}/realms/provider/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=emailn&username=ismael@edusynch.team&password=123456&grant_type=password
+
+###
+@access_token = {{token.response.body.access_token}}

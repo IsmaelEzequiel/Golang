@@ -18,7 +18,7 @@ type ServiceImpl struct {
 }
 
 func (s *ServiceImpl) Create(newCampaign contract.NewCampaign) (string, error) {
-	campaign, err := NewCampaign(newCampaign.Name, newCampaign.Content, newCampaign.Emails)
+	campaign, err := NewCampaign(newCampaign.Name, newCampaign.Content, newCampaign.Emails, newCampaign.CreatedBy)
 
 	if err != nil {
 		return "", err
@@ -66,10 +66,11 @@ func (s *ServiceImpl) Delete(id string) error {
 		return internalerrors.ProcessErrorNotFound(err)
 	}
 
-	if campaign == nil {
-		return errors.New("Campaign not found")
+	if campaign.Status != Pending {
+		return errors.New("status invalid to be deleted")
 	}
 
+	campaign.Delete()
 	err = s.Repository.Delete(campaign)
 
 	if err != nil {

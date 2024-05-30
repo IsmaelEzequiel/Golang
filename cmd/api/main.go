@@ -25,7 +25,12 @@ func main() {
 	campaignService := campaign.ServiceImpl{Repository: &database.CampaignRepository{Database: db}}
 	handler := endpoints.Handler{CampaignService: &campaignService}
 
+	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("pong"))
+	})
+
 	r.Route("/campaigns", func(r chi.Router) {
+		r.Use(endpoints.CheckAuthMiddleware)
 		r.Post("/", endpoints.HandlerError(handler.CampaignPost))
 		r.Get("/", endpoints.HandlerError(handler.CampaignGet))
 		r.Get("/{id}", endpoints.HandlerError(handler.CampaignGetBy))

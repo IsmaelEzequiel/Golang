@@ -17,9 +17,10 @@ import (
 
 var (
 	body = contract.NewCampaign{
-		Name:    "test",
-		Content: "content",
-		Emails:  []string{"teste@teste.com"},
+		Name:      "test",
+		Content:   "content",
+		CreatedBy: "email@email",
+		Emails:    []string{"teste@teste.com"},
 	}
 	service = new(internalMock.CampaignServiceMock)
 	handler = Handler{CampaignService: &campaign.ServiceImpl{}}
