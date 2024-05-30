@@ -1,9 +1,8 @@
 @host = http://localhost:3000
 @keycloak_host = http://localhost:8080
-@campaign_id = cpajai48iv23a5ivct6g
 
 ###
-
+# @name campaigns
 POST {{host}}/campaigns
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
@@ -11,8 +10,12 @@ Authorization: Bearer {{access_token}}
 {
 	"name": "Ismael ezequiel alves",
 	"content": "some long content",
-	"contacts": ["email@email.com", "emails@email.com"]
+	"emails": ["salmeidabatista@gmail.com", "henrique@teste.com.br"]
 }
+
+###
+
+@campaign_id = {{campaigns.response.body.id}}
 
 ###
 // GET /

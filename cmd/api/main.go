@@ -4,14 +4,22 @@ import (
 	"emailSender/internal/domain/campaign"
 	"emailSender/internal/endpoints"
 	"emailSender/internal/infrastructure/database"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	r := chi.NewRouter()
+
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("error loading .env file")
+	}
 
 	// Middlewares
 	r.Use(middleware.RequestID)

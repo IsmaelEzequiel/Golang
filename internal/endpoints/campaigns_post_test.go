@@ -2,8 +2,8 @@ package endpoints
 
 import (
 	"bytes"
+	"context"
 	"emailSender/internal/contract"
-	"emailSender/internal/domain/campaign"
 	internalMock "emailSender/internal/test/internal-mock"
 	"encoding/json"
 	"errors"
@@ -15,28 +15,35 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-var (
-	body = contract.NewCampaign{
+func setup(body contract.NewCampaign, createdBy string) (*http.Request, *httptest.ResponseRecorder) {
+	var buffer bytes.Buffer
+
+	json.NewEncoder((&buffer)).Encode(body)
+	req, _ := http.NewRequest("POST", "/", &buffer)
+	ctx := context.WithValue(req.Context(), emailKey, createdBy)
+	req = req.WithContext(ctx)
+	rr := httptest.NewRecorder()
+
+	return req, rr
+}
+
+func (h *Handler) Test_CampaignPost_should_save_new_campaign(t *testing.T) {
+	assert := assert.New(t)
+
+	body := contract.NewCampaign{
 		Name:      "test",
 		Content:   "content",
 		CreatedBy: "email@email",
 		Emails:    []string{"teste@teste.com"},
 	}
-	service = new(internalMock.CampaignServiceMock)
-	handler = Handler{CampaignService: &campaign.ServiceImpl{}}
-	buffer  bytes.Buffer
-)
-
-func (h *Handler) Test_CampaignPost_should_save_new_campaign(t *testing.T) {
-	assert := assert.New(t)
+	service := new(internalMock.CampaignServiceMock)
 
 	service.On("Create", mock.MatchedBy(func(request contract.NewCampaign) bool {
-		return request.Name == body.Name
+		return request.Name == body.Name && request.CreatedBy == "email@email.com"
 	})).Return("123", nil)
+	handler := Handler{CampaignService: service}
 
-	json.NewEncoder((&buffer)).Encode(body)
-	req, _ := http.NewRequest("POST", "/", &buffer)
-	rr := httptest.NewRecorder()
+	req, rr := setup(body, "email@email.com")
 
 	_, status, err := handler.CampaignPost(rr, req)
 
@@ -47,11 +54,18 @@ func (h *Handler) Test_CampaignPost_should_save_new_campaign(t *testing.T) {
 func (h *Handler) Test_CampaignPost_should_inform_error(t *testing.T) {
 	assert := assert.New(t)
 
+	body := contract.NewCampaign{
+		Name:      "test",
+		Content:   "content",
+		CreatedBy: "email@email",
+		Emails:    []string{"teste@teste.com"},
+	}
+	service := new(internalMock.CampaignServiceMock)
+	handler := Handler{CampaignService: service}
+
 	service.On("Create", mock.Anything).Return("", errors.New("some error"))
 
-	json.NewEncoder((&buffer)).Encode(body)
-	req, _ := http.NewRequest("POST", "/", &buffer)
-	rr := httptest.NewRecorder()
+	req, rr := setup(body, "email@email.com")
 
 	json, status, err := handler.CampaignPost(rr, req)
 

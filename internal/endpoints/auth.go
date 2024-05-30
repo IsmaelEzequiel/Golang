@@ -3,11 +3,16 @@ package endpoints
 import (
 	"context"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/golang-jwt/jwt/v5"
 )
+
+type contextKey string
+
+const emailKey contextKey = "email"
 
 func CheckAuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +24,7 @@ func CheckAuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		provider, err := oidc.NewProvider(r.Context(), "http://localhost:8080/realms/provider")
+		provider, err := oidc.NewProvider(r.Context(), os.Getenv("OIDC_PROVIDER"))
 
 		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -39,7 +44,7 @@ func CheckAuthMiddleware(next http.Handler) http.Handler {
 		claims := parsedToken.Claims.(jwt.MapClaims)
 		email := claims["email"]
 
-		ctx := context.WithValue(r.Context(), "email", email)
+		ctx := context.WithValue(r.Context(), emailKey, email)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
