@@ -29,6 +29,11 @@ func (r *CampaignRepositoryMock) Delete(campaign *campaign.Campaign) error {
 	return args.Error(0)
 }
 
+func (r *CampaignRepositoryMock) Start(campaign *campaign.Campaign) error {
+	args := r.Called(campaign)
+	return args.Error(0)
+}
+
 func (r *CampaignRepositoryMock) GetBy(id string) (*campaign.Campaign, error) {
 	args := r.Called(id)
 	if args.Error(1) != nil {

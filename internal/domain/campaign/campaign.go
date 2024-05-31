@@ -42,6 +42,11 @@ func (c *Campaign) Delete() {
 	c.UpdatedAt = time.Now()
 }
 
+func (c *Campaign) Done() {
+	c.Status = Done
+	c.UpdatedAt = time.Now()
+}
+
 func NewCampaign(name string, content string, emails []string, createdBy string) (*Campaign, error) {
 
 	contacts := make([]Contact, len(emails))

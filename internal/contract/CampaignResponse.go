@@ -1,9 +1,10 @@
 package contract
 
 type CampaignResponse struct {
-	ID                   string
-	Name                 string
-	Content              string
-	Status               string
-	AmountOfEmailsToSend int
+	ID                   string `json:"id"`
+	Name                 string `json:"name"`
+	Content              string `json:"content"`
+	Status               string `json:"status"`
+	AmountOfEmailsToSend int    `json:"amount_of_emails_to_send"`
+	CreatedBy            string `json:"created_by"`
 }
