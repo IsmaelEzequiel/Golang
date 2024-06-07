@@ -12,8 +12,6 @@ import (
 )
 
 func Test_Handler_Errors_When_Endpoint_Returns_Erros(t *testing.T) {
-	assert := assert.New(t)
-
 	endpoint := func(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
 		return nil, http.StatusInternalServerError, internalerrors.ErrInternal
 	}
@@ -25,13 +23,11 @@ func Test_Handler_Errors_When_Endpoint_Returns_Erros(t *testing.T) {
 
 	handlerFunc.ServeHTTP(res, req)
 
-	assert.Equal(http.StatusInternalServerError, res.Code)
-	assert.Contains(res.Body.String(), internalerrors.ErrInternal.Error())
+	assert.Equal(t, http.StatusInternalServerError, res.Code)
+	assert.Contains(t, res.Body.String(), internalerrors.ErrInternal.Error())
 }
 
 func Test_Handler_Errors_When_Endpoint_Returns_Bad_Request(t *testing.T) {
-	assert := assert.New(t)
-
 	endpoint := func(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
 		return nil, http.StatusBadRequest, errors.New("Some error")
 	}
@@ -43,13 +39,11 @@ func Test_Handler_Errors_When_Endpoint_Returns_Bad_Request(t *testing.T) {
 
 	handlerFunc.ServeHTTP(res, req)
 
-	assert.Equal(http.StatusBadRequest, res.Code)
-	assert.Contains(res.Body.String(), "Some error")
+	assert.Equal(t, http.StatusBadRequest, res.Code)
+	assert.Contains(t, res.Body.String(), "Some error")
 }
 
 func Test_Handler_Errors_When_Endpoint_Returns_Object(t *testing.T) {
-	assert := assert.New(t)
-
 	objForTest := campaign.Campaign{Name: "nome do ismael"}
 
 	endpoint := func(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
@@ -63,6 +57,6 @@ func Test_Handler_Errors_When_Endpoint_Returns_Object(t *testing.T) {
 
 	handlerFunc.ServeHTTP(res, req)
 
-	assert.Equal(http.StatusOK, res.Code)
-	assert.Contains(res.Body.String(), "nome do ismael")
+	assert.Equal(t, http.StatusOK, res.Code)
+	assert.Contains(t, res.Body.String(), "nome do ismael")
 }

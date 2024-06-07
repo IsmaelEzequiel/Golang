@@ -13,8 +13,6 @@ import (
 )
 
 func Test_CampaignGet_should_return_campaign(t *testing.T) {
-	assert := assert.New(t)
-
 	body := contract.CampaignResponse{
 		ID:      "123",
 		Name:    "test",
@@ -30,16 +28,14 @@ func Test_CampaignGet_should_return_campaign(t *testing.T) {
 
 	response, status, _ := handler.CampaignGetBy(rr, req)
 
-	assert.Equal(status, http.StatusOK)
-	assert.Equal(body.ID, response.(*contract.CampaignResponse).ID)
-	assert.Equal(body.Name, response.(*contract.CampaignResponse).Name)
-	assert.Equal(body.Content, response.(*contract.CampaignResponse).Content)
-	assert.Equal(body.Status, response.(*contract.CampaignResponse).Status)
+	assert.Equal(t, status, http.StatusOK)
+	assert.Equal(t, body.ID, response.(*contract.CampaignResponse).ID)
+	assert.Equal(t, body.Name, response.(*contract.CampaignResponse).Name)
+	assert.Equal(t, body.Content, response.(*contract.CampaignResponse).Content)
+	assert.Equal(t, body.Status, response.(*contract.CampaignResponse).Status)
 }
 
 func Test_CampaignGet_should_return_error_when_something_went_wrong(t *testing.T) {
-	assert := assert.New(t)
-
 	service := new(internalMock.CampaignServiceMock)
 	service.On("GetBy", mock.Anything).Return(nil, errors.New("Some error"))
 	handler := Handler{CampaignService: service}
@@ -48,6 +44,6 @@ func Test_CampaignGet_should_return_error_when_something_went_wrong(t *testing.T
 
 	_, status, err := handler.CampaignGetBy(rr, req)
 
-	assert.Equal(status, http.StatusOK)
-	assert.Equal(err.Error(), "Some error")
+	assert.Equal(t, status, http.StatusOK)
+	assert.Equal(t, err.Error(), "Some error")
 }

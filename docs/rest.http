@@ -2,12 +2,6 @@
 @keycloak_host = http://localhost:8080
 
 ###
-
-GET {{host}}/send-email
-
-###
-
-###
 # @name campaigns
 POST {{host}}/campaigns
 Content-Type: application/json

@@ -11,8 +11,6 @@ import (
 )
 
 func TestCampaign_delete_success(t *testing.T) {
-	assert := assert.New(t)
-
 	service := new(internalMock.CampaignServiceMock)
 	handler := Handler{CampaignService: service}
 	service.On("Delete", mock.Anything).Return(nil)
@@ -22,6 +20,6 @@ func TestCampaign_delete_success(t *testing.T) {
 
 	_, status, err := handler.CampaignsDelete(rr, req)
 
-	assert.Nil(err)
-	assert.Equal(status, http.StatusOK)
+	assert.Nil(t, err)
+	assert.Equal(t, status, http.StatusOK)
 }
