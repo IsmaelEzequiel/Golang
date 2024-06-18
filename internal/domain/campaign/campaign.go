@@ -18,6 +18,7 @@ const (
 	Started  = "started"
 	Canceled = "canceled"
 	Deleted  = "deleted"
+	Fail     = "fail"
 	Done     = "done"
 )
 
@@ -37,6 +38,11 @@ func (c *Campaign) Cancel() {
 	c.UpdatedAt = time.Now()
 }
 
+func (c *Campaign) Fail() {
+	c.Status = Fail
+	c.UpdatedAt = time.Now()
+}
+
 func (c *Campaign) Delete() {
 	c.Status = Deleted
 	c.UpdatedAt = time.Now()
@@ -44,6 +50,11 @@ func (c *Campaign) Delete() {
 
 func (c *Campaign) Done() {
 	c.Status = Done
+	c.UpdatedAt = time.Now()
+}
+
+func (c *Campaign) Started() {
+	c.Status = Started
 	c.UpdatedAt = time.Now()
 }
 

@@ -79,6 +79,19 @@ func (s *ServiceImpl) Delete(id string) error {
 	return nil
 }
 
+func (s *ServiceImpl) SendPendingEmail(campaignSaved *Campaign) error {
+	err := s.SendEmail(campaignSaved)
+
+	if err != nil {
+		campaignSaved.Fail()
+	} else {
+		campaignSaved.Done()
+	}
+	s.Repository.Update(campaignSaved)
+
+	return err
+}
+
 func (s *ServiceImpl) Start(id string) error {
 	campaign, err := s.getAndValidateStatusPending(id)
 
@@ -86,15 +99,10 @@ func (s *ServiceImpl) Start(id string) error {
 		return err
 	}
 
-	err = s.SendEmail(campaign)
+	go s.SendPendingEmail(campaign)
 
-	if err != nil {
-		return internalerrors.ProcessErrorNotFound(err)
-	}
-
-	campaign.Done()
+	campaign.Started()
 	err = s.Repository.Update(campaign)
-
 	if err != nil {
 		return internalerrors.ProcessErrorNotFound(err)
 	}
@@ -110,7 +118,7 @@ func (s *ServiceImpl) getAndValidateStatusPending(id string) (*Campaign, error) 
 	}
 
 	if campaign.Status != Pending {
-		return nil, errors.New("status invalid to be deleted")
+		return nil, errors.New("status invalid to be updated")
 	}
 
 	return campaign, nil
