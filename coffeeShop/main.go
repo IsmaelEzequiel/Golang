@@ -19,4 +19,6 @@ func main() {
 		result := fmt.Sprintf("%s for $%v", v.Name, v.Price)
 		fmt.Println(result)
 	}
+
+	domain.IsCoffeeAvailable("Latte")
 }
