@@ -3,22 +3,41 @@ package main
 import (
 	"CoffeeShop/domain"
 	"fmt"
+	"net/http"
+	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	coffees, err := domain.GetCoffees()
+	port := os.Getenv("APP_PORT")
+	r := gin.Default()
+	r.LoadHTMLGlob("templates/*.html")
 
-	if err != nil {
-		fmt.Println("Error while getting coffeelist ", err)
-		return
-	}
+	r.GET("/", func(ctx *gin.Context) {
+		coffee, _ := domain.GetCoffees()
+		ctx.HTML(http.StatusOK, "index.html", gin.H{"list": coffee.CoffeeList})
+	})
 
-	fmt.Println("Printing Coffees")
+	r.GET("/coffees", func(ctx *gin.Context) {
+		coffees, err := domain.GetCoffees()
 
-	for _, v := range coffees.CoffeeList {
-		result := fmt.Sprintf("%s for $%v", v.Name, v.Price)
-		fmt.Println(result)
-	}
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"message": "Error while getting coffeelist",
+				"error":   err,
+			})
+		}
 
-	domain.IsCoffeeAvailable("Latte")
+		ctx.JSON(http.StatusOK, coffees)
+	})
+
+	r.GET("/coffees/:name", func(ctx *gin.Context) {
+		param := ctx.Param("name")
+		coffee := domain.IsCoffeeAvailable(param)
+		ctx.JSON(http.StatusOK, coffee)
+	})
+
+	fmt.Printf("Starting the app on port %s", port)
+	r.Run(fmt.Sprintf(":%s", port))
 }

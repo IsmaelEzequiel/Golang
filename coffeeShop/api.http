@@ -1,0 +1,18 @@
+@host = http://localhost:8080
+
+
+GET {{host}}
+Accept: application/json
+
+###
+
+GET {{host}}/ping
+
+### 
+
+GET {{host}}/coffees
+
+###
+
+GET {{host}}/coffees/Latte
+
