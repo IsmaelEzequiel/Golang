@@ -25,5 +25,8 @@ migratedown:
 sqlc:
 	snap run sqlc generate
 
-.PHONY: sqlc init status postgres createdb dropdb migrateup migratedown
+test:
+	go test -v -cover ./...
+
+.PHONY: test sqlc init status postgres createdb dropdb migrateup migratedown
 
