@@ -17,14 +17,14 @@ func createRandomEntry(t *testing.T) (Entry, Account) {
 		Currency: util.RandomCurrency(),
 	}
 
-	acc, _ := testQueries.CreateAccount(context.Background(), acc_args)
+	acc, _ := storeDB.CreateAccount(context.Background(), acc_args)
 
 	args := CreateEntryParams{
 		AccountID: acc.ID,
 		Amount:    util.RandomMoney(),
 	}
 
-	entry, err := testQueries.CreateEntry(context.Background(), args)
+	entry, err := storeDB.CreateEntry(context.Background(), args)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, entry)
@@ -43,7 +43,7 @@ func TestCreateEntry(t *testing.T) {
 func TestGetEntry(t *testing.T) {
 	curr, _ := createRandomEntry(t)
 
-	acc, err := testQueries.GetEntry(context.Background(), curr.ID)
+	acc, err := storeDB.GetEntry(context.Background(), curr.ID)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, acc)
@@ -63,7 +63,7 @@ func TestListEntry(t *testing.T) {
 		Offset:    0,
 	}
 
-	entries, err := testQueries.ListEntries(context.Background(), args)
+	entries, err := storeDB.ListEntries(context.Background(), args)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, entries)

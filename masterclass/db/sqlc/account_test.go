@@ -17,7 +17,7 @@ func createRandomAccount(t *testing.T) Account {
 		Currency: util.RandomCurrency(),
 	}
 
-	acc, err := testQueries.CreateAccount(context.Background(), args)
+	acc, err := storeDB.CreateAccount(context.Background(), args)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, acc)
@@ -39,7 +39,7 @@ func TestCreateAccount(t *testing.T) {
 func TestGetAccount(t *testing.T) {
 	curr := createRandomAccount(t)
 
-	acc, err := testQueries.GetAccount(context.Background(), curr.ID)
+	acc, err := storeDB.GetAccount(context.Background(), curr.ID)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, acc)
@@ -59,7 +59,7 @@ func TestUpdatedAccount(t *testing.T) {
 		Balance: util.RandomMoney(),
 	}
 
-	acc, err := testQueries.UpdateAccount(context.Background(), args)
+	acc, err := storeDB.UpdateAccount(context.Background(), args)
 	require.NoError(t, err)
 	require.NotEmpty(t, acc)
 
@@ -71,10 +71,10 @@ func TestUpdatedAccount(t *testing.T) {
 func TestDeleteAccount(t *testing.T) {
 	curr := createRandomAccount(t)
 
-	err := testQueries.DeleteAccouunt(context.Background(), curr.ID)
+	err := storeDB.DeleteAccouunt(context.Background(), curr.ID)
 	require.NoError(t, err)
 
-	acc, err := testQueries.GetAccount(context.Background(), curr.ID)
+	acc, err := storeDB.GetAccount(context.Background(), curr.ID)
 	require.Error(t, err)
 	require.EqualError(t, err, err.Error())
 	require.Empty(t, acc)
@@ -86,7 +86,7 @@ func TestListAccount(t *testing.T) {
 		Offset: 0,
 	}
 
-	accs, err := testQueries.ListAccounts(context.Background(), args)
+	accs, err := storeDB.ListAccounts(context.Background(), args)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, accs)

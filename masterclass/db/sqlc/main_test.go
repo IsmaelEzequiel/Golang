@@ -6,27 +6,25 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 const (
 	dbSource = "postgres://root:123@localhost:5432/simple_bank?sslmode=disable"
 )
 
-var testQueries *Queries
-var testDB *pgx.Conn
+var storeDB Store
 
 func TestMain(m *testing.M) {
-	var err error
-	testDB, err = pgx.Connect(context.Background(), dbSource)
+	poolConn, err := pgxpool.New(context.Background(), dbSource)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer testDB.Close(context.Background())
+	defer poolConn.Close()
 
-	testQueries = New(testDB)
+	storeDB = *NewStore(poolConn)
 
 	os.Exit(m.Run())
 }
